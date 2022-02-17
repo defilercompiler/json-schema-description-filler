@@ -1,0 +1,14 @@
+[
+  {
+    "name": "patient_id",
+    "mode": "REQUIRED",
+    "type": "INTEGER",
+    "description": ""
+  },
+  {
+    "name": "column2",
+    "mode": "REQUIRED",
+    "type": "DATE",
+    "description": ""
+  }
+]
