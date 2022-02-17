@@ -2,7 +2,7 @@
 
 Primarily intended to fill in missing `description` fields in BigQuery json schema files. Uses matching `name` fields to search if `description` is filled in another json schema files (another table).
 Eg.
-table1.json
+- table1.json
 ```
 [
   {
@@ -16,7 +16,7 @@ table1.json
   }
 ]
 ```
-table2.json
+- table2.json
 ```
 [
   {
@@ -31,7 +31,7 @@ table2.json
 ]
 ```
 becomes
-table1.json
+- table1.json
 ```
 [
   {
@@ -45,4 +45,4 @@ table1.json
   }
 ]
 ```
-table2.json - no changes
+- table2.json - no changes
