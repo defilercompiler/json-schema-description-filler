@@ -1,50 +1,53 @@
 package main
 
 import (
-    "encoding/json"
-    "fmt"
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"log"
+	"os"
+	"path/filepath"
+	"strings"
 )
-  
-// declaring a struct
-type Country struct {
-  
-    // defining struct variables
-    Name      string
-    Capital   string
-    Continent string
+
+// type Columns struct {
+// 	Columns []Column `json:"catlog_nodes"`
+// }
+
+type Column struct {
+	Name        string `json: "name"`
+	Description string `json: "description"`
 }
-  
+
 // main function
 func main() {
-  
-    // defining a struct instance
-    var country []Country
-  
-    // JSON array to be decoded
-    // to an array in golang
-    Data := []byte(`
-    [
-        {"Name": "Japan", "Capital": "Tokyo", "Continent": "Asia"},
-        {"Name": "Germany", "Capital": "Berlin", "Continent": "Europe"},
-        {"Name": "Greece", "Capital": "Athens", "Continent": "Europe"},
-        {"Name": "Israel", "Capital": "Jerusalem", "Continent": "Asia"}
-    ]`)
-  
-    // decoding JSON array to
-    // the country array
-    err := json.Unmarshal(Data, &country)
-  
-    if err != nil {
-  
-        // if error is not nil
-        // print error
-        fmt.Println(err)
-    }
-  
-    // printing decoded array
-    // values one by one
-    for i := range country {
-        fmt.Println(country[i].Name + " - " + country[i].Capital + 
-                                     " - " + country[i].Continent)
-    }
+
+	paths := getJSONs("testjson/")
+	print(paths[len(paths)-1])
+	file, _ := ioutil.ReadFile("testjson/table1.json")
+	var data []Column
+	err := json.Unmarshal(file, &data)
+	if err != nil {
+		log.Fatalf("File reading failed, %v", err)
+	}
+	//print(data[len(data)-1].Description)
+
+}
+
+// Given startPath recursively returns paths to all .json files
+func getJSONs(startPath string) []string {
+	var paths []string
+	filepath.Walk(startPath, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			fmt.Println("Error:", err)
+		}
+		if info.IsDir() {
+			return nil
+		}
+		if strings.HasSuffix(info.Name(), ".json") {
+			paths = append(paths, path)
+		}
+		return nil
+	})
+	return paths
 }
