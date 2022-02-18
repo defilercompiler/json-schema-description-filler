@@ -21,6 +21,10 @@ type Table []Column
 // Main function
 func main() {
 
+	if len(os.Args) != 2 {
+		log.Fatal("Argument passing failed. Usage: ./cmd comma,separated,paths")
+	}
+
 	startDirs := strings.Split(os.Args[1], ",")
 	indent := "  "
 	var table Table
