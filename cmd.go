@@ -70,7 +70,7 @@ func getJSONs(startPath string) []string {
 	return paths
 }
 
-// Get tables with missing descriptions, try to find & fill them in
+// Given tables, return map of name -> description
 func getDescriptionLookup(tables map[string]Table) map[string]string {
 	descriptionLookup := make(map[string]string)
 	for _, table := range tables {
