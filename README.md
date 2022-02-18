@@ -9,6 +9,7 @@ go build -o cmd ./
 ```
 ./cmd comma,delimited,paths  # Searches recursively all provided paths for json files.
 ```
+It is recommended to have a json formatter in place as this tool disregards formatting.
 Eg.
 ### table1.json
 ```
