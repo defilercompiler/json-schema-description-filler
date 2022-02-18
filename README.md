@@ -1,48 +1,48 @@
 # json-schema-description-filler
 
 Primarily intended to fill in missing `description` fields in BigQuery json schema files. Uses matching `name` fields to search if `description` is filled in another json schema files (another table).
+Searches recursively all provided paths for json files.
+## Building:
+```
+go build -o cmd ./
+```
+## Usage:
+```
+./cmd comma,delimited,paths  # Searches recursively all provided paths for json files.
+```
 Eg.
-- table1.json
+### table1.json
 ```
 [
   {
-    "name": "patient_id",
+    "description": "",
     "mode": "REQUIRED",
-    "type": "INTEGER",
-    "description": ""
-  },
-  {
-  more columns ...
+    "name": "patient_id",
+    "type": "INTEGER"
   }
 ]
 ```
-- table2.json
+### table2.json
 ```
 [
   {
-    "name": "patient_id",
+    "description": "The unique identifier of a patient",
     "mode": "REQUIRED",
-    "type": "INTEGER",
-    "description": "The unique identifier of a patient"
-  },
-  {
-  more columns ...
+    "name": "patient_id",
+    "type": "INTEGER"
   }
 ]
 ```
-becomes
-- table1.json
+
+### Updated table1.json
 ```
 [
   {
-    "name": "patient_id",
+    "description": "The unique identifier of a patient",
     "mode": "REQUIRED",
-    "type": "INTEGER",
-    "description": "The unique identifier of a patient"
-  },
-  {
-  more columns ...
+    "name": "patient_id",
+    "type": "INTEGER"
   }
 ]
 ```
-- table2.json - no changes
+### table2.json - no changes
