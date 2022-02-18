@@ -84,6 +84,7 @@ func getDescriptionLookup(tables map[string]Table) map[string]string {
 }
 
 // Get tables with missing descriptions, try to find & fill them in
+// Only return tables that were updated
 func fillInDescriptions(tables map[string]Table, descriptionLookup map[string]string) map[string]Table {
 	for ti, table := range tables {
 		updatedDescription := false
