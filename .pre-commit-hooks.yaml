@@ -4,4 +4,3 @@
     entry: /app
     language: docker
     pass_filenames: false
-    require_serial: true
