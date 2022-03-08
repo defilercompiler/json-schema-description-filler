@@ -1,6 +1,13 @@
--   id: json-schema-description-filler
-    name: json-schema-description-filler 
+-   id: json-schema-description-filler-docker
+    name: json-schema-description-filler-docker
     description: Primarily intended to fill in missing description fields in BigQuery json schema files. Uses matching name fields to search if description is filled in another file for the same column.
     entry: /app
     language: docker
     pass_filenames: false
+-   id: json-schema-description-filler-golang
+    name: json-schema-description-filler-golang
+    description: Primarily intended to fill in missing description fields in BigQuery json schema files. Uses matching name fields to search if description is filled in another file for the same column.
+    entry: json-schema-description-filler
+    language: golang
+    pass_filenames: false
+    
