@@ -18,7 +18,7 @@ docker build .  # for docker
     - repo: https://github.com/defilercompiler/json-schema-description-filler
       rev: 'fill-in-commit-sha'
       hooks:
-        - id: json-schema-description-filler
+        - id: json-schema-description-filler-docker | json-schema-description-filler-golang
           args: ['path/to/your/jsons/,another/path/']
 
 ```
