@@ -11,10 +11,10 @@ import (
 )
 
 type Column struct {
-	Description string `json:"description"`
-	Mode        string `json:"mode"`
-	Name        string `json:"name"`
-	Type        string `json:"type"`
+	Description *string `json:"description"`
+	Mode        *string `json:"mode"`
+	Name        string  `json:"name"`
+	Type        string  `json:"type"`
 }
 type Table []Column
 
@@ -72,11 +72,11 @@ func getJSONs(startPath string) []string {
 }
 
 // Given tables, return map of name -> description
-func getDescriptionLookup(tables map[string]Table) map[string]string {
-	descriptionLookup := make(map[string]string)
+func getDescriptionLookup(tables map[string]Table) map[string]*string {
+	descriptionLookup := make(map[string]*string)
 	for _, table := range tables {
 		for _, column := range table {
-			if column.Description != "" {
+			if column.Description != nil {
 				descriptionLookup[column.Name] = column.Description
 			}
 		}
@@ -86,12 +86,13 @@ func getDescriptionLookup(tables map[string]Table) map[string]string {
 
 // Get tables with missing mode, fill in NULLABLE (which is default)
 func fillInDefaultMode(tables map[string]Table) map[string]Table {
+	nullable := "NULLABLE"
 	for ti, table := range tables {
 		updatedMode := false
 		for i, column := range table {
-			if column.Mode == "" {
+			if column.Mode == nil {
 				updatedMode = true
-				column.Mode = "NULLABLE"
+				column.Mode = &nullable
 				tables[ti][i] = column
 			}
 		}
@@ -102,20 +103,22 @@ func fillInDefaultMode(tables map[string]Table) map[string]Table {
 	return tables
 }
 
-
 // Get tables with missing descriptions, try to find & fill them in
 // Only return tables that were updated
-func fillInDescriptions(tables map[string]Table, descriptionLookup map[string]string) map[string]Table {
+func fillInDescriptions(tables map[string]Table, descriptionLookup map[string]*string) map[string]Table {
+	empty := ""
 	for ti, table := range tables {
 		updatedDescription := false
 		for i, column := range table {
-			if column.Description == "" {
+			if column.Description == nil {
+				updatedDescription = true
 				newDescription := descriptionLookup[column.Name]
-				if newDescription != "" {
-					updatedDescription = true
+				if newDescription != &empty && newDescription != nil {
 					column.Description = newDescription
-					tables[ti][i] = column
+				} else {
+					column.Description = &empty
 				}
+				tables[ti][i] = column
 			}
 		}
 		if !updatedDescription {
