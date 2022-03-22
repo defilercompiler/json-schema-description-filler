@@ -46,7 +46,8 @@ func main() {
 		tables[path] = table
 	}
 	descriptionLookup := getDescriptionLookup(tables)
-	updatedTables := fillInDescriptions(tables, descriptionLookup)
+	updatedTablesMode := fillInDefaultMode(tables)
+	updatedTables := fillInDescriptions(updatedTablesMode, descriptionLookup)
 
 	writeTables(updatedTables, indent)
 
@@ -82,6 +83,25 @@ func getDescriptionLookup(tables map[string]Table) map[string]string {
 	}
 	return descriptionLookup
 }
+
+// Get tables with missing mode, fill in NULLABLE (which is default)
+func fillInDefaultMode(tables map[string]Table) map[string]Table {
+	for ti, table := range tables {
+		updatedMode := false
+		for i, column := range table {
+			if column.Mode == "" {
+				updatedMode = true
+				column.Mode = "NULLABLE"
+				tables[ti][i] = column
+			}
+		}
+		if !updatedMode {
+			delete(tables, ti)
+		}
+	}
+	return tables
+}
+
 
 // Get tables with missing descriptions, try to find & fill them in
 // Only return tables that were updated
