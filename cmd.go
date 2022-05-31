@@ -47,7 +47,24 @@ func main() {
 	}
 	descriptionLookup := getDescriptionLookup(tables)
 	updatedTablesMode := fillInDefaultMode(tables)
-	updatedTables := fillInDescriptions(updatedTablesMode, descriptionLookup)
+	writeTables(updatedTablesMode, indent)
+
+	// Do the same for descriptions
+	tables = make(map[string]Table)
+	for _, startDir := range startDirs {
+		paths = append(paths, getJSONs(startDir)...)
+	}
+
+	for _, path := range paths {
+		table = Table{}
+		file, _ := ioutil.ReadFile(path)
+		err := json.Unmarshal(file, &table)
+		if err != nil {
+			log.Fatalf("File reading failed, %v", err)
+		}
+		tables[path] = table
+	}
+	updatedTables := fillInDescriptions(tables, descriptionLookup)
 
 	writeTables(updatedTables, indent)
 
@@ -76,7 +93,7 @@ func getDescriptionLookup(tables map[string]Table) map[string]*string {
 	descriptionLookup := make(map[string]*string)
 	for _, table := range tables {
 		for _, column := range table {
-			if column.Description != nil {
+			if column.Description != nil && *column.Description != "" {
 				descriptionLookup[column.Name] = column.Description
 			}
 		}
@@ -110,7 +127,7 @@ func fillInDescriptions(tables map[string]Table, descriptionLookup map[string]*s
 	for ti, table := range tables {
 		updatedDescription := false
 		for i, column := range table {
-			if column.Description == nil {
+			if column.Description == nil || *column.Description == "" {
 				updatedDescription = true
 				newDescription := descriptionLookup[column.Name]
 				if newDescription != &empty && newDescription != nil {

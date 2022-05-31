@@ -8,32 +8,36 @@ import (
 )
 
 func TestGetDescriptionLookup(t *testing.T) {
+	desc1 := "d1"
+	mode1 := "m1"
+	mode2 := "m2"
+	emptyString := ""
 	t.Run("getDescriptionLookup", func(t *testing.T) {
 		tables := map[string]Table{
 			"p1": []Column{
 				{
-					Description: "d1",
-					Mode:        "m1",
+					Description: &desc1,
+					Mode:        &mode1,
 					Name:        "n1",
 					Type:        "t1",
 				},
 				{
-					Description: "",
-					Mode:        "m2",
+					Description: &emptyString,
+					Mode:        &mode2,
 					Name:        "n2",
 					Type:        "t2",
 				},
 			},
 			"p2": []Column{
 				{
-					Description: "",
-					Mode:        "m1",
+					Description: &emptyString,
+					Mode:        &mode1,
 					Name:        "n1",
 					Type:        "t1",
 				},
 				{
-					Description: "",
-					Mode:        "m2",
+					Description: &emptyString,
+					Mode:        &mode2,
 					Name:        "n2",
 					Type:        "t2",
 				},
@@ -49,60 +53,63 @@ func TestGetDescriptionLookup(t *testing.T) {
 	})
 }
 func TestFillinDescriptions(t *testing.T) {
+	desc1 := "d1"
+	mode1 := "m1"
+	mode2 := "m2"
+	emptyString := ""
+
 	t.Run("fillInDescriptions", func(t *testing.T) {
 		tables := map[string]Table{
 			"p1": []Column{
 				{
-					Description: "d1",
-					Mode:        "m1",
+					Description: &desc1,
+					Mode:        &mode1,
 					Name:        "n1",
 					Type:        "t1",
 				},
 				{
-					Description: "",
-					Mode:        "m2",
+					Description: &emptyString,
+					Mode:        &mode2,
 					Name:        "n2",
 					Type:        "t2",
 				},
 			},
 			"p2": []Column{
 				{
-					Description: "",
-					Mode:        "m1",
+					Description: &emptyString,
+					Mode:        &mode1,
 					Name:        "n1",
 					Type:        "t1",
 				},
 				{
-					Description: "",
-					Mode:        "m2",
+					Description: &emptyString,
+					Mode:        &mode2,
 					Name:        "n2",
 					Type:        "t2",
 				},
 			},
 		}
-		expected := fmt.Sprint(map[string]Table{
+		expected := map[string]Table{
 			"p2": []Column{
 				{
-					Description: "d1",
-					Mode:        "m1",
+					Description: &desc1,
+					Mode:        &mode1,
 					Name:        "n1",
 					Type:        "t1",
 				},
 				{
-					Description: "",
-					Mode:        "m2",
+					Description: &emptyString,
+					Mode:        &mode2,
 					Name:        "n2",
 					Type:        "t2",
 				},
 			},
-		})
-		descriptionLookup := map[string]string{
-			"n1": "d1",
 		}
-		result := fmt.Sprint(fillInDescriptions(tables, descriptionLookup))
-		assert.Equal(t, result, expected, "Fills in descriptions correctly")
-		if result != expected {
-			t.Errorf("%s did not match %s", result, expected)
+		descriptionLookup := map[string]*string{
+			"n1": &desc1,
 		}
+		result := fillInDescriptions(tables, descriptionLookup)
+		assert.Equal(t, result["n1"], expected["n1"], "Fills in descriptions correctly")
+		assert.Equal(t, len(result), 2, "Fills in descriptions correctly")
 	})
 }
